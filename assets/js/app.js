@@ -4,19 +4,17 @@
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
-
+const itemClear = document.getElementById('item-clear');
 ///////////////////////////////////////////////////////////////////////
 //  Helpful Functions For App
 ///////////////////////////////////////////////////////////////////////
 const addItem = (e) => {
     e.preventDefault();
-    //validate input
     const newItem = itemInput.value;
     if(newItem === '') {
         alert('Please add a grocery item.');
         return;
     }
-    //create list item
     const li = document.createElement('li');
     li.appendChild(document.createTextNode(newItem));
     const button = createButton('remove-item btn-link text-red');
@@ -24,7 +22,16 @@ const addItem = (e) => {
     itemList.appendChild(li);
     itemInput.value = '';
 }
-//Create button functionally
+const removeItem = (e) => {
+    if(e.target.parentElement.classList.contains('remove-item')) {
+        e.target.parentElement.parentElement.remove();
+    }
+}
+const clearItems = (e) => {
+    while(itemList.firstChild) {
+        itemList.removeChild(itemList.firstChild);
+    }
+}
 const createButton = (classes) => {
     const button = document.createElement('button');
     button.className = classes;
@@ -32,7 +39,6 @@ const createButton = (classes) => {
     button.appendChild(icon);
     return button;
 }
-//Create icon functionally
 const createIcon = (classes) => {
     const icon = document.createElement('i');
     icon.className = classes;
@@ -44,3 +50,5 @@ const createIcon = (classes) => {
 //  Event Listeners For App
 ///////////////////////////////////////////////////////////////////////
 itemForm.addEventListener('submit', addItem);
+itemList.addEventListener('click', removeItem);
+itemClear.addEventListener('click', clearItems);
