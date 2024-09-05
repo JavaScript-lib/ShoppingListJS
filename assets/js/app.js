@@ -9,6 +9,11 @@ const itemFilter = document.getElementById('filter');
 ///////////////////////////////////////////////////////////////////////
 //  Helpful Functions For App
 ///////////////////////////////////////////////////////////////////////
+const displayItems = () => {
+    const itemsFromLocalStorage = getItemsFromLocalStorage();
+    itemsFromLocalStorage.forEach(item => addItemToDOM(item));
+    checkUI();
+}
 const onAddItem = (e) => {
     e.preventDefault();
     const newItem = itemInput.value;
@@ -21,18 +26,27 @@ const onAddItem = (e) => {
     checkUI();
     itemInput.value = '';
 }
-const removeItem = (e) => {
+const onClickItem = (e) => {
     if(e.target.parentElement.classList.contains('remove-item')) {
-        if(confirm('Are you sure you want to remove this?')) {
-            e.target.parentElement.parentElement.remove();
-            checkUI();
-        }
+        removeItem(e.target.parentElement.parentElement);
     }
+}
+const removeItem = (item) => {
+    if(confirm('Are you sure you want to delete this item?'));
+    item.remove();
+    removeItemFromLocalStorage(item.textContent);
+    checkUI();
+}
+const removeItemFromLocalStorage = (item) => {
+    let itemsFromLocalStorage = getItemsFromLocalStorage();
+    itemsFromLocalStorage = itemsFromLocalStorage.filter((i) => i !== item);
+    localStorage.setItem('items', JSON.stringify(itemsFromLocalStorage));
 }
 const clearItems = (e) => {
     while(itemList.firstChild) {
         itemList.removeChild(itemList.firstChild);
     }
+    localStorage.removeItem('items');
     checkUI();
 }
 const createButton = (classes) => {
@@ -70,14 +84,18 @@ const checkUI = () => {
     }
 }
 const addItemToLocalStorage = (item) => {
+    const itemsFromLocalStorage = getItemsFromLocalStorage();
+    itemsFromLocalStorage.push(item);
+    localStorage.setItem('items', JSON.stringify(itemsFromLocalStorage));
+}
+const getItemsFromLocalStorage = () => {
     let itemsFromLocalStorage;
     if(localStorage.getItem('items') === null) {
         itemsFromLocalStorage = [];
     } else {
         itemsFromLocalStorage = JSON.parse(localStorage.getItem('items'));
     }
-    itemsFromLocalStorage.push(item);
-    localStorage.setItem('items', JSON.stringify(itemsFromLocalStorage));
+    return itemsFromLocalStorage;
 }
 const addItemToDOM = (item) => {
     const li = document.createElement('li');
@@ -87,16 +105,23 @@ const addItemToDOM = (item) => {
     itemList.appendChild(li);
 }
 ///////////////////////////////////////////////////////////////////////
-//  Event Listeners For App
+//  Initialize Function For App
 ///////////////////////////////////////////////////////////////////////
-itemForm.addEventListener('submit', onAddItem);
-itemList.addEventListener('click', removeItem);
-itemClear.addEventListener('click', clearItems);
-itemFilter.addEventListener('input', filterItems);
+const init = () => {
+    ///////////////////////////////////////////////////////////////////////
+    //  Event Listeners For App
+    ///////////////////////////////////////////////////////////////////////
+    itemForm.addEventListener('submit', onAddItem);
+    itemList.addEventListener('click', onClickItem);
+    itemClear.addEventListener('click', clearItems);
+    itemFilter.addEventListener('input', filterItems);
+    document.addEventListener('DOMContentLoaded', displayItems);
+    ///////////////////////////////////////////////////////////////////////
+    //  Accessory Functions For App
+    ///////////////////////////////////////////////////////////////////////
+    checkUI();
+}
 ///////////////////////////////////////////////////////////////////////
-//  Accessory Functions For App
+//  Initialize Call To Start App
 ///////////////////////////////////////////////////////////////////////
-checkUI();
-///////////////////////////////////////////////////////////////////////
-//  Local Storage For App
-///////////////////////////////////////////////////////////////////////
+init();
