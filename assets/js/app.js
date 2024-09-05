@@ -9,18 +9,15 @@ const itemFilter = document.getElementById('filter');
 ///////////////////////////////////////////////////////////////////////
 //  Helpful Functions For App
 ///////////////////////////////////////////////////////////////////////
-const addItem = (e) => {
+const onAddItem = (e) => {
     e.preventDefault();
     const newItem = itemInput.value;
     if(newItem === '') {
         alert('Please add a grocery item.');
         return;
     }
-    const li = document.createElement('li');
-    li.appendChild(document.createTextNode(newItem));
-    const button = createButton('remove-item btn-link text-red');
-    li.appendChild(button);
-    itemList.appendChild(li);
+    addItemToDOM(newItem);
+    addItemToLocalStorage(newItem);
     checkUI();
     itemInput.value = '';
 }
@@ -72,10 +69,27 @@ const checkUI = () => {
         itemFilter.style.display = 'block';
     }
 }
+const addItemToLocalStorage = (item) => {
+    let itemsFromLocalStorage;
+    if(localStorage.getItem('items') === null) {
+        itemsFromLocalStorage = [];
+    } else {
+        itemsFromLocalStorage = JSON.parse(localStorage.getItem('items'));
+    }
+    itemsFromLocalStorage.push(item);
+    localStorage.setItem('items', JSON.stringify(itemsFromLocalStorage));
+}
+const addItemToDOM = (item) => {
+    const li = document.createElement('li');
+    li.appendChild(document.createTextNode(item));
+    const button = createButton('remove-item btn-link text-red');
+    li.appendChild(button);
+    itemList.appendChild(li);
+}
 ///////////////////////////////////////////////////////////////////////
 //  Event Listeners For App
 ///////////////////////////////////////////////////////////////////////
-itemForm.addEventListener('submit', addItem);
+itemForm.addEventListener('submit', onAddItem);
 itemList.addEventListener('click', removeItem);
 itemClear.addEventListener('click', clearItems);
 itemFilter.addEventListener('input', filterItems);
@@ -83,3 +97,6 @@ itemFilter.addEventListener('input', filterItems);
 //  Accessory Functions For App
 ///////////////////////////////////////////////////////////////////////
 checkUI();
+///////////////////////////////////////////////////////////////////////
+//  Local Storage For App
+///////////////////////////////////////////////////////////////////////
