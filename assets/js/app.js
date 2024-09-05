@@ -6,6 +6,8 @@ const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
 const itemClear = document.getElementById('item-clear');
 const itemFilter = document.getElementById('filter');
+const formBtn = itemForm.querySelector('button');
+let isEditMode = false;
 ///////////////////////////////////////////////////////////////////////
 //  Helpful Functions For App
 ///////////////////////////////////////////////////////////////////////
@@ -29,7 +31,17 @@ const onAddItem = (e) => {
 const onClickItem = (e) => {
     if(e.target.parentElement.classList.contains('remove-item')) {
         removeItem(e.target.parentElement.parentElement);
+    } else {
+        setItemToEdit(e.target);
     }
+}
+const setItemToEdit = (item) => {
+    isEditMode = true;
+    itemList.querySelectorAll('li').forEach((i) => i.classList.remove('edit-mode'));
+    item.classList.add('edit-mode');
+    formBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item';
+    formBtn.style.backgroundColor = '#228B22'
+    itemInput.value = item.textContent;
 }
 const removeItem = (item) => {
     if(confirm('Are you sure you want to delete this item?'));
