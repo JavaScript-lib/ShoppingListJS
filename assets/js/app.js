@@ -29,6 +29,11 @@ const onAddItem = (e) => {
         itemToEdit.classList.remove('edit-mode');
         itemToEdit.remove();
         isEditMode = false;
+    } else {
+        if(checkIfItemExists(newItem)) {
+            alert('That item already exists.');
+            return;
+        }
     }
     addItemToDOM(newItem);
     addItemToLocalStorage(newItem);
@@ -41,6 +46,10 @@ const onClickItem = (e) => {
     } else {
         setItemToEdit(e.target);
     }
+}
+const checkIfItemExists = (item) => {
+    const itemsFromLocalStorage = getItemsFromLocalStorage();
+    return itemsFromLocalStorage.includes(item);
 }
 const setItemToEdit = (item) => {
     isEditMode = true;
