@@ -14,7 +14,7 @@ let isEditMode = false;
 const displayItems = () => {
     const itemsFromLocalStorage = getItemsFromLocalStorage();
     itemsFromLocalStorage.forEach(item => addItemToDOM(item));
-    checkUI();
+    resetUI();
 }
 const onAddItem = (e) => {
     e.preventDefault();
@@ -23,9 +23,16 @@ const onAddItem = (e) => {
         alert('Please add a grocery item.');
         return;
     }
+    if(isEditMode) {
+        const itemToEdit = itemList.querySelector('.edit-mode');
+        removeItemFromLocalStorage(itemToEdit.textContent);
+        itemToEdit.classList.remove('edit-mode');
+        itemToEdit.remove();
+        isEditMode = false;
+    }
     addItemToDOM(newItem);
     addItemToLocalStorage(newItem);
-    checkUI();
+    resetUI();
     itemInput.value = '';
 }
 const onClickItem = (e) => {
@@ -47,7 +54,7 @@ const removeItem = (item) => {
     if(confirm('Are you sure you want to delete this item?'));
     item.remove();
     removeItemFromLocalStorage(item.textContent);
-    checkUI();
+    resetUI();
 }
 const removeItemFromLocalStorage = (item) => {
     let itemsFromLocalStorage = getItemsFromLocalStorage();
@@ -59,7 +66,7 @@ const clearItems = (e) => {
         itemList.removeChild(itemList.firstChild);
     }
     localStorage.removeItem('items');
-    checkUI();
+    resetUI();
 }
 const createButton = (classes) => {
     const button = document.createElement('button');
@@ -85,7 +92,8 @@ const filterItems = (e) => {
         }
     });
 }
-const checkUI = () => {
+const resetUI = () => {
+    itemInput.value = '';
     const items = itemList.querySelectorAll('li');
     if(items.length === 0) {
         itemClear.style.display = 'none';
@@ -94,6 +102,9 @@ const checkUI = () => {
         itemClear.style.display = 'block';
         itemFilter.style.display = 'block';
     }
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+    formBtn.style.backgroundColor = '#333';
+    isEditMode = false;
 }
 const addItemToLocalStorage = (item) => {
     const itemsFromLocalStorage = getItemsFromLocalStorage();
@@ -131,7 +142,7 @@ const init = () => {
     ///////////////////////////////////////////////////////////////////////
     //  Accessory Functions For App
     ///////////////////////////////////////////////////////////////////////
-    checkUI();
+    resetUI();
 }
 ///////////////////////////////////////////////////////////////////////
 //  Initialize Call To Start App
