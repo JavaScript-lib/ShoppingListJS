@@ -1,8 +1,13 @@
+///////////////////////////////////////////////////////////////////////
+//  Variables For App
+///////////////////////////////////////////////////////////////////////
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
 
-//Event Listeners
+///////////////////////////////////////////////////////////////////////
+//  Helpful Functions For App
+///////////////////////////////////////////////////////////////////////
 const addItem = (e) => {
     e.preventDefault();
     //validate input
@@ -19,7 +24,7 @@ const addItem = (e) => {
     itemList.appendChild(li);
     itemInput.value = '';
 }
-
+//Create button functionally
 const createButton = (classes) => {
     const button = document.createElement('button');
     button.className = classes;
@@ -27,10 +32,15 @@ const createButton = (classes) => {
     button.appendChild(icon);
     return button;
 }
-
+//Create icon functionally
 const createIcon = (classes) => {
     const icon = document.createElement('i');
     icon.className = classes;
     return icon;
 }
+
+
+///////////////////////////////////////////////////////////////////////
+//  Event Listeners For App
+///////////////////////////////////////////////////////////////////////
 itemForm.addEventListener('submit', addItem);
